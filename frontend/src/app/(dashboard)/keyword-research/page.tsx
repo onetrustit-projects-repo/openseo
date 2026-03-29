@@ -14,7 +14,7 @@ export default function KeywordResearchPage() {
     if (!query) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/keywords/research?q=${encodeURIComponent(query)}`);
+      const res = await fetch(`http://172.16.160.37:3002/api/keywords/research?q=${encodeURIComponent(query)}`);
       const data = await res.json();
       if (data.success) setKeywords(data.data.keywords || []);
     } catch (err) {

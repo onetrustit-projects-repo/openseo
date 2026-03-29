@@ -16,7 +16,7 @@ export default function RankTrackingPage() {
     if (!keyword || !domain) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/ranks?keyword=${encodeURIComponent(keyword)}&domain=${encodeURIComponent(domain)}`);
+      const res = await fetch(`http://172.16.160.37:3002/api/ranks?keyword=${encodeURIComponent(keyword)}&domain=${encodeURIComponent(domain)}`);
       const result = await res.json();
       if (result.success) setData(result.data);
     } catch (err) {

@@ -14,7 +14,7 @@ export default function BacklinksPage() {
     if (!domain) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/backlinks?domain=${encodeURIComponent(domain)}`);
+      const res = await fetch(`http://172.16.160.37:3002/api/backlinks?domain=${encodeURIComponent(domain)}`);
       const result = await res.json();
       if (result.success) setData(result.data);
     } catch (err) {

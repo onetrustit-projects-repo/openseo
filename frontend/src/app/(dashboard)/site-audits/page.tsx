@@ -14,7 +14,7 @@ export default function SiteAuditsPage() {
     if (!url) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/audits?url=${encodeURIComponent(url)}`);
+      const res = await fetch(`http://172.16.160.37:3002/api/audits?url=${encodeURIComponent(url)}`);
       const result = await res.json();
       if (result.success) setData(result.data);
     } catch (err) {
