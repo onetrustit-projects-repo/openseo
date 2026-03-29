@@ -1,0 +1,51 @@
+stages:
+  - seo
+
+seo_audit:
+  stage: seo
+  image: node:20-alpine
+  before_script:
+    - npm install -g @openseo/cli
+  script:
+    - openseo audit --url "$PRODUCTION_URL" --fail-on-warnings
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+  variables:
+    PRODUCTION_URL: "https://example.com"
+  allow_failure: false
+
+seo_robots:
+  stage: seo
+  image: node:20-alpine
+  before_script:
+    - npm install -g @openseo/cli
+  script:
+    - openseo check-robots --url "$PRODUCTION_URL"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  variables:
+    PRODUCTION_URL: "https://example.com"
+
+seo_vitals:
+  stage: seo
+  image: node:20-alpine
+  before_script:
+    - npm install -g @openseo/cli
+  script:
+    - openseo check-vitals --url "$PRODUCTION_URL" --lcp 2500 --fid 100 --cls 0.1
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  variables:
+    PRODUCTION_URL: "https://example.com"
+
+seo_indexing:
+  stage: seo
+  image: node:20-alpine
+  before_script:
+    - npm install -g @openseo/cli
+  script:
+    - openseo check-indexing --url "$PRODUCTION_URL"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  variables:
+    PRODUCTION_URL: "https://example.com"
