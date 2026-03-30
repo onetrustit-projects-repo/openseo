@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Search, FileText, AlertTriangle, RefreshCw, CheckCircle, XCircle, Link2, Clock } from 'lucide-react'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://172.16.160.37:3002'
 
 export default function SiteAudits() {
   const [activeTab, setActiveTab] = useState('audit')
