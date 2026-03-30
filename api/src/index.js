@@ -5,6 +5,7 @@ const metricsRoutes = require('./routes/metrics');
 const syntheticRoutes = require('./routes/synthetic');
 const alertsRoutes = require('./routes/alerts');
 const recommendationsRoutes = require('./routes/recommendations');
+const collectionRoutes = require('./routes/collection');
 
 const app = express();
 const PORT = process.env.PORT || 3090;
@@ -21,6 +22,7 @@ app.use('/api/metrics', metricsRoutes);
 app.use('/api/synthetic', syntheticRoutes);
 app.use('/api/alerts', alertsRoutes);
 app.use('/api/recommendations', recommendationsRoutes);
+app.use('/api/collect', collectionRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Error:', err.message);
