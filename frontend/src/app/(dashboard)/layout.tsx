@@ -2,13 +2,14 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Link2, FileSearch, TrendingUp, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Search, Link2, FileSearch, TrendingUp, LayoutDashboard, Menu, X, FileText } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/keyword-research', label: 'Keywords', icon: Search },
   { href: '/backlinks', label: 'Backlinks', icon: Link2 },
   { href: '/site-audits', label: 'Site Audits', icon: FileSearch },
+  { href: '/site-reports', label: 'Site Reports', icon: FileText },
   { href: '/rank-tracking', label: 'Rankings', icon: TrendingUp },
 ];
 

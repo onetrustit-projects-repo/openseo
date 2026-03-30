@@ -1,7 +1,14 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+const fs = require('fs');
 
-const db = new Database(path.join(__dirname, '../../data/openseo.db'));
+// Ensure data directory exists
+const dataDir = path.join(__dirname, '../../data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const db = new Database(path.join(dataDir, 'openseo.db'));
 
 // Initialize tables
 db.exec(`
@@ -41,17 +48,6 @@ db.exec(`
     rank INTEGER,
     change INTEGER,
     history TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  );
-
-  CREATE TABLE IF NOT EXISTS consolidated_reports (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    domain TEXT NOT NULL,
-    audit_id TEXT,
-    keyword_data TEXT,
-    backlink_data TEXT,
-    rank_data TEXT,
-    overall_score INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 `);
