@@ -8,6 +8,9 @@ const keywordRoutes = require('./routes/keywords');
 const backlinkRoutes = require('./routes/backlinks');
 const auditRoutes = require('./routes/audits');
 const rankRoutes = require('./routes/ranks');
+const crawlRoutes = require('./routes/crawl');
+const issuesRoutes = require('./routes/issues');
+const auditV2Routes = require('./routes/audit-v2');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -23,6 +26,9 @@ app.use('/api/keywords', keywordRoutes);
 app.use('/api/backlinks', backlinkRoutes);
 app.use('/api/audits', auditRoutes);
 app.use('/api/ranks', rankRoutes);
+app.use('/api/crawl', crawlRoutes);
+app.use('/api/issues', issuesRoutes);
+app.use('/api/audit-v2', auditV2Routes);
 
 // Health
 app.get('/api/health', (req, res) => {
@@ -37,7 +43,10 @@ app.get('/api', (req, res) => {
       keywords: 'GET /api/keywords/suggest?q=term',
       backlinks: 'GET /api/backlinks?domain=example.com',
       audits: 'GET /api/audits?url=https://example.com',
-      ranks: 'GET /api/ranks?keyword=term&domain=example.com'
+      ranks: 'GET /api/ranks?keyword=term&domain=example.com',
+      crawl: 'POST /api/crawl/start',
+      issues: 'GET /api/issues',
+      'audit-v2': 'POST /api/audit-v2/run'
     }
   });
 });
