@@ -11,6 +11,9 @@ const rankRoutes = require('./routes/ranks');
 const crawlRoutes = require('./routes/crawl');
 const issuesRoutes = require('./routes/issues');
 const auditV2Routes = require('./routes/audit-v2');
+const notionRoutes = require('./routes/notion');
+const notionSyncRoutes = require('./routes/sync');
+const notionContentRoutes = require('./routes/content');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -29,6 +32,9 @@ app.use('/api/ranks', rankRoutes);
 app.use('/api/crawl', crawlRoutes);
 app.use('/api/issues', issuesRoutes);
 app.use('/api/audit-v2', auditV2Routes);
+app.use('/api/notion', notionRoutes);
+app.use('/api/notion/sync', notionSyncRoutes);
+app.use('/api/notion/content', notionContentRoutes);
 
 // Health
 app.get('/api/health', (req, res) => {
@@ -38,7 +44,15 @@ app.get('/api/health', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     name: 'OpenSEO API',
-    version: '1.1.0',
+    version: '1.2.0',
+    features: [
+      'Keyword Research',
+      'Backlink Analysis',
+      'Site Audits (v1 & v2)',
+      'Rank Tracking',
+      'Notion Integration',
+      'Content Analysis'
+    ],
     endpoints: {
       keywords: 'GET /api/keywords/suggest?q=term',
       backlinks: 'GET /api/backlinks?domain=example.com',
@@ -46,7 +60,8 @@ app.get('/api', (req, res) => {
       ranks: 'GET /api/ranks?keyword=term&domain=example.com',
       crawl: 'POST /api/crawl/start',
       issues: 'GET /api/issues',
-      'audit-v2': 'POST /api/audit-v2/run'
+      'audit-v2': 'POST /api/audit-v2/run',
+      notion: 'POST /api/notion/connect'
     }
   });
 });
