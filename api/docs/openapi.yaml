@@ -1,0 +1,297 @@
+openapi: 3.0.0
+info:
+  title: OpenSEO API
+  description: |
+    Comprehensive REST API for SEO features including URL auditing, keyword analysis,
+    schema validation, content scoring, rank tracking, and site crawling.
+  version: 1.0.0
+  contact:
+    name: OpenSEO Developer Support
+    email: api@openseo.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.openseo.dev/api
+    description: Production API
+  - url: http://localhost:3080/api
+    description: Local development
+
+tags:
+  - name: Authentication
+    description: API key and JWT authentication
+  - name: URL Audit
+    description: Analyze URLs for SEO issues
+  - name: Keywords
+    description: Keyword research and tracking
+  - name: Schema
+    description: Structured data validation and generation
+  - name: Content
+    description: SEO content analysis and scoring
+  - name: Rank Tracking
+    description: Keyword ranking monitoring
+  - name: Site Crawling
+    description: Bulk site analysis
+  - name: Webhooks
+    description: Event notifications
+  - name: Analytics
+    description: Usage and rate limit information
+
+paths:
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register new API user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                plan:
+                  type: string
+                  enum: [free, pro, enterprise]
+                  default: free
+      responses:
+        201:
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+                  user: { type: object }
+                  apiKey: { type: string }
+                  token: { type: string }
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login and get API credentials
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        200:
+          description: Login successful
+
+  /url-audit/analyze:
+    post:
+      tags: [URL Audit]
+      summary: Analyze URL for SEO issues
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                checkTypes:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        200:
+          description: Analysis complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  data:
+                    type: object
+                    properties:
+                      url: { type: string }
+                      score: { type: number }
+                      issues: { type: object }
+                      checks: { type: object }
+
+  /keywords/research:
+    post:
+      tags: [Keywords]
+      summary: Research keywords
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [seed]
+              properties:
+                seed:
+                  type: string
+                limit:
+                  type: integer
+                  default: 50
+      responses:
+        200:
+          description: Keywords found
+
+  /schema/validate:
+    post:
+      tags: [Schema]
+      summary: Validate schema markup
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url: { type: string }
+                schema: { type: string }
+                content: { type: string }
+      responses:
+        200:
+          description: Validation result
+
+  /content/score:
+    post:
+      tags: [Content]
+      summary: Score content for SEO
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url: { type: string }
+                content: { type: string }
+                title: { type: string }
+                keywords: { type: array, items: { type: string } }
+      responses:
+        200:
+          description: Content scored
+
+  /ranks/track:
+    post:
+      tags: [Rank Tracking]
+      summary: Track keyword rankings
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [keywords, domain]
+              properties:
+                keywords: { type: array, items: { type: string } }
+                domain: { type: string }
+                location: { type: string, default: US }
+      responses:
+        200:
+          description: Rankings tracked
+
+  /crawl/start:
+    post:
+      tags: [Site Crawling]
+      summary: Start crawl job
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url: { type: string }
+                scope: { type: string, enum: [single, domain, subtree] }
+                maxPages: { type: integer, default: 100 }
+      responses:
+        201:
+          description: Crawl job started
+
+  /webhooks:
+    get:
+      tags: [Webhooks]
+      summary: List webhooks
+      security:
+        - ApiKeyAuth: []
+      responses:
+        200:
+          description: List of webhooks
+    post:
+      tags: [Webhooks]
+      summary: Register webhook
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url, events]
+              properties:
+                url: { type: string }
+                events: { type: array, items: { type: string } }
+                secret: { type: string }
+      responses:
+        201:
+          description: Webhook registered
+
+  /analytics/usage:
+    get:
+      tags: [Analytics]
+      summary: Get API usage analytics
+      security:
+        - ApiKeyAuth: []
+      responses:
+        200:
+          description: Usage data
+
+  /analytics/limits:
+    get:
+      tags: [Analytics]
+      summary: Get rate limits
+      security:
+        - ApiKeyAuth: []
+      responses:
+        200:
+          description: Rate limits
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
