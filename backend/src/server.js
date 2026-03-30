@@ -14,17 +14,18 @@ const auditV2Routes = require('./routes/audit-v2');
 const notionRoutes = require('./routes/notion');
 const notionSyncRoutes = require('./routes/sync');
 const notionContentRoutes = require('./routes/content');
+const videoRoutes = require('./routes/video');
+const visualRoutes = require('./routes/visual');
+const imageRoutes = require('./routes/image');
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Middleware
 app.use(helmet());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 
-// Routes
 app.use('/api/keywords', keywordRoutes);
 app.use('/api/backlinks', backlinkRoutes);
 app.use('/api/audits', auditRoutes);
@@ -35,8 +36,10 @@ app.use('/api/audit-v2', auditV2Routes);
 app.use('/api/notion', notionRoutes);
 app.use('/api/notion/sync', notionSyncRoutes);
 app.use('/api/notion/content', notionContentRoutes);
+app.use('/api/video', videoRoutes);
+app.use('/api/visual', visualRoutes);
+app.use('/api/image', imageRoutes);
 
-// Health
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
@@ -44,14 +47,16 @@ app.get('/api/health', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     name: 'OpenSEO API',
-    version: '1.2.0',
+    version: '1.3.0',
     features: [
       'Keyword Research',
       'Backlink Analysis',
       'Site Audits (v1 & v2)',
       'Rank Tracking',
       'Notion Integration',
-      'Content Analysis'
+      'Video SEO',
+      'Visual Search',
+      'Image Optimization'
     ],
     endpoints: {
       keywords: 'GET /api/keywords/suggest?q=term',
@@ -61,12 +66,14 @@ app.get('/api', (req, res) => {
       crawl: 'POST /api/crawl/start',
       issues: 'GET /api/issues',
       'audit-v2': 'POST /api/audit-v2/run',
-      notion: 'POST /api/notion/connect'
+      notion: 'POST /api/notion/connect',
+      video: 'POST /api/video/analyze',
+      visual: 'POST /api/visual/analysis',
+      image: 'POST /api/image/alt-text'
     }
   });
 });
 
-// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ success: false, error: err.message });
