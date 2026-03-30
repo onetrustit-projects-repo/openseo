@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Search, FileText, AlertTriangle, RefreshCw, CheckCircle, XCircle, Link2, Clock } from 'lucide-react'
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://172.16.160.37:3002'
+const API_BASE = 'http://172.16.160.37:3002'
 
 export default function SiteAudits() {
   const [activeTab, setActiveTab] = useState('audit')
@@ -26,7 +26,7 @@ export default function SiteAudits() {
       const data = await res.json()
       if (data.success) setAudits(data.audits || [])
     } catch (err) {
-      console.error(err)
+      console.error('Failed to fetch audits:', err)
     }
     setLoading(false)
   }
@@ -44,9 +44,12 @@ export default function SiteAudits() {
       const data = await res.json()
       if (data.success) {
         pollAudit(data.auditId)
+      } else {
+        console.error('Audit start failed:', data)
+        setRunning(false)
       }
     } catch (err) {
-      console.error(err)
+      console.error('Failed to start audit:', err)
       setRunning(false)
     }
   }
@@ -65,7 +68,7 @@ export default function SiteAudits() {
           }
         }
       } catch (err) {
-        console.error(err)
+        console.error('Poll error:', err)
       }
       if (running) setTimeout(poll, 2000)
     }
@@ -78,7 +81,7 @@ export default function SiteAudits() {
       const data = await res.json()
       if (data.success) setSelectedAudit({ ...audit, results: data.results })
     } catch (err) {
-      console.error(err)
+      console.error('Failed to fetch results:', err)
     }
   }
 
